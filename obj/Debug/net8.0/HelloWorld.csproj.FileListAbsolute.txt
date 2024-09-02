@@ -1,0 +1,14 @@
+/home/anubhavg-icpl/Desktop/HelloWorld/bin/Debug/net8.0/HelloWorld
+/home/anubhavg-icpl/Desktop/HelloWorld/bin/Debug/net8.0/HelloWorld.deps.json
+/home/anubhavg-icpl/Desktop/HelloWorld/bin/Debug/net8.0/HelloWorld.runtimeconfig.json
+/home/anubhavg-icpl/Desktop/HelloWorld/bin/Debug/net8.0/HelloWorld.dll
+/home/anubhavg-icpl/Desktop/HelloWorld/bin/Debug/net8.0/HelloWorld.pdb
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.AssemblyInfoInputs.cache
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.AssemblyInfo.cs
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.csproj.CoreCompileInputs.cache
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.dll
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/refint/HelloWorld.dll
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.pdb
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/HelloWorld.genruntimeconfig.cache
+/home/anubhavg-icpl/Desktop/HelloWorld/obj/Debug/net8.0/ref/HelloWorld.dll
