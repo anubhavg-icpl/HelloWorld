@@ -1,20 +1,54 @@
-# Stage 1: Build the application
+# Start with the .NET SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-WORKDIR /source
-COPY *.csproj .
+WORKDIR /src
+
+# Copy csproj and restore dependencies
+COPY *.csproj ./
 RUN dotnet restore
-COPY . .
-RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained true /p:PublishTrimmed=true /p:PublishSingleFile=true /p:InvariantGlobalization=true
 
-# Ensure the binary is executable
-RUN chmod +x /app/HelloWorld
+# Copy the rest of the code
+COPY . ./
 
-# Stage 2: Create the final image
-FROM scratch
+# Publish the application
+RUN dotnet publish -c Release -o /app \
+    --self-contained true \
+    -r linux-x64 \
+    /p:PublishTrimmed=true \
+    /p:PublishSingleFile=true \
+    /p:InvariantGlobalization=true
+
+# Create a stage for collecting necessary runtime dependencies
+FROM debian:bullseye-slim AS depscollector
+
+# Copy the published app to identify dependencies
+COPY --from=build /app/HelloWorld /HelloWorld
+
+# Install necessary tools
+RUN apt-get update && apt-get install -y \
+    libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Final stage using scratch image
+FROM scratch AS runtime
 
 # Copy the published app
 COPY --from=build /app/HelloWorld /HelloWorld
 
-# Set the entrypoint
+# Copy necessary libraries and dependencies
+COPY --from=depscollector /lib/x86_64-linux-gnu/libpthread.so.0 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/librt.so.1 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu/
+COPY --from=depscollector /lib64/ld-linux-x86-64.so.2 /lib64/
+COPY --from=depscollector /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/
+COPY --from=depscollector /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2 /usr/lib/x86_64-linux-gnu/
+COPY --from=depscollector /usr/lib/x86_64-linux-gnu/libkrb5.so.3 /usr/lib/x86_64-linux-gnu/
+COPY --from=depscollector /usr/lib/x86_64-linux-gnu/libk5crypto.so.3 /usr/lib/x86_64-linux-gnu/
+COPY --from=depscollector /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 /usr/lib/x86_64-linux-gnu/
+
+# Set the entry point
 ENTRYPOINT ["/HelloWorld"]
